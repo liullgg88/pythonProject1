@@ -8,8 +8,8 @@ import sys
 import time
 def sign_request(http_method, url, headers=None, body=None):
     sig = signer.Signer()
-    sig.Key = "EUWCTMRJSEMOPXMQBYCQ"
-    sig.Secret = "3gPhrII9WTDX1utNevxkNgbzj09SypiI7MEkS9re"
+    sig.Key = "xxxx"
+    sig.Secret = "xxxx"
     req = signer.HttpRequest(http_method, url)
     req.headers = headers or {}
     req.body = json.dumps(body) if body else ""
