@@ -10,8 +10,8 @@ import os
 
 def sign_request(http_method, url, headers=None, body=None):
     sig = signer.Signer()
-    sig.Key = "EUWCTMRJSEMOPXMQBYCQ"
-    sig.Secret = "3gPhrII9WTDX1utNevxkNgbzj09SypiI7MEkS9re"
+    sig.Key = "xxxx"
+    sig.Secret = "xxxxx"
     req = signer.HttpRequest(http_method, url)
     req.headers = headers or {}
     req.body = json.dumps(body) if body else ""
@@ -146,15 +146,6 @@ def wait_or_execute(pid):
 if __name__ == '__main__':
     dict_mapping = {
         # "retail-lll": '{"pipeline_id": "d7580ec1f3ab4f7bae2028c8bd5c66cd", "choose_jobs": ["168864794392314618d37-850e-46c8-b911-d2d644b19430"], "choose_stages": [0]}',
-        "sy": '{"pipeline_id": "992cad1f95a5464596a17cf55d0794de", "choose_jobs": ["JOB_femhb", "JOB_ZyTPf", "JOB_XdteN", "JOB_cPDNy", "JOB_BefDX", "JOB_GfHZS", "JOB_CbzCy", "JOB_Ackpb", "JOB_XkZbc", "JOB_fFCQy", "JOB_mhZsG", "JOB_mrCQY", "JOB_KDAYk", "JOB_dFEMT", "JOB_mDZsf"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89", "1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69", "171629560859755a6814c-eb11-4d29-8bf8-62488b59262f", "1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029", "17162958907471778fcc3-0bbe-4a09-a561-313c295d2c0f"]}',
-        "ybj": '{"pipeline_id": "453d29bada834d18872b8d95c715b494", "choose_jobs": ["JOB_femhb", "JOB_ZyTPf", "JOB_XdteN", "JOB_cPDNy", "JOB_BefDX", "JOB_GfHZS", "JOB_CbzCy", "JOB_Ackpb", "JOB_XkZbc", "JOB_fFCQy", "JOB_mhZsG", "JOB_mrCQY", "JOB_KDAYk", "JOB_FhiBC"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89","1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69","171629560859755a6814c-eb11-4d29-8bf8-62488b59262f","1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029","17162958907471778fcc3-0bbe-4a09-a561-313c295d2c0f"]}',
-        "txp": '{"pipeline_id": "6310d4b5beef475eb75ba3cf40e8f729", "choose_jobs": ["JOB_femhb", "JOB_STzDY", "JOB_iCFKi", "JOB_YFDiz", "JOB_wybKt", "JOB_GSbrw", "JOB_ZyTPf", "JOB_XdteN", "JOB_cPDNy", "JOB_BefDX", "JOB_GfHZS", "JOB_fFCQy", "JOB_XkZbc", "JOB_mhZsG", "JOB_mrCQY", "JOB_KDAYk", "JOB_CbzCy", "JOB_Ackpb", "JOB_xKYKx", "JOB_BRXAc", "JOB_sxFGX", "JOB_YJFHa"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89",  "171646779570881e9dc2b-9ce9-4688-9c2a-eae996ca5f89",  "1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69",  "1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029",  "171629560859755a6814c-eb11-4d29-8bf8-62488b59262f",  "17168032167746c5678d4-0eed-4ef2-8fdf-8cecb8bbd878"]}',
-        "lswj": '{"pipeline_id": "d68c72766c194c18b45569198cad1558", "choose_jobs": ["JOB_femhb", "JOB_STzDY", "JOB_iCFKi", "JOB_YFDiz", "JOB_wybKt", "JOB_GSbrw", "JOB_ZyTPf", "JOB_XdteN", "JOB_cPDNy", "JOB_BefDX", "JOB_GfHZS",  "JOB_fFCQy", "JOB_XkZbc", "JOB_mhZsG", "JOB_mrCQY", "JOB_KDAYk", "JOB_CbzCy", "JOB_Ackpb", "JOB_xKYKx", "JOB_BRXAc", "JOB_sxFGX", "JOB_zaxxJ", "JOB_XzEEk" ], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89","171646779570881e9dc2b-9ce9-4688-9c2a-eae996ca5f89","1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69","1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029","171629560859755a6814c-eb11-4d29-8bf8-62488b59262f","17168032167746c5678d4-0eed-4ef2-8fdf-8cecb8bbd878"]}',
-        "lrsp": '{"pipeline_id": "9a53d6dd35854d06aa67f04119c2fd22", "choose_jobs": ["JOB_femhb","JOB_STzDY","JOB_iCFKi","JOB_YFDiz","JOB_wybKt","JOB_GSbrw","JOB_ZyTPf","JOB_XdteN","JOB_cPDNy","JOB_BefDX","JOB_GfHZS","JOB_fFCQy","JOB_XkZbc","JOB_mhZsG","JOB_mrCQY","JOB_KDAYk","JOB_CbzCy","JOB_Ackpb","JOB_xKYKx","JOB_BRXAc","JOB_sxFGX","JOB_zaxxJ","JOB_Qyism"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89", "171646779570881e9dc2b-9ce9-4688-9c2a-eae996ca5f89", "1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69", "1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029", "171629560859755a6814c-eb11-4d29-8bf8-62488b59262f",  "17168032167746c5678d4-0eed-4ef2-8fdf-8cecb8bbd878"]}',
-        "qhpz": '{"pipeline_id": "3da14ab66c85481f8938571e25d50e36", "choose_jobs": ["JOB_femhb","JOB_ZyTPf","JOB_XdteN","JOB_cPDNy","JOB_BefDX","JOB_GfHZS","JOB_CbzCy","JOB_Ackpb","JOB_XkZbc","JOB_fFCQy","JOB_mhZsG","JOB_mrCQY","JOB_KDAYk","JOB_FhiBC" ], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89","1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69","171629560859755a6814c-eb11-4d29-8bf8-62488b59262f","1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029","17162958907471778fcc3-0bbe-4a09-a561-313c295d2c0f" ]}',
-        "qhj": '{"pipeline_id": "0ed51aafb4ed4bebb2ae1ece1421a278", "choose_jobs": ["JOB_femhb", "JOB_STzDY", "JOB_iCFKi", "JOB_YFDiz","JOB_wybKt","JOB_GSbrw","JOB_ZyTPf","JOB_XdteN","JOB_cPDNy","JOB_BefDX", "JOB_GfHZS", "JOB_fFCQy", "JOB_XkZbc", "JOB_mhZsG", "JOB_mrCQY", "JOB_KDAYk", "JOB_CbzCy", "JOB_Ackpb","JOB_xKYKx","JOB_BRXAc", "JOB_sxFGX", "JOB_dFEMT"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89","171646779570881e9dc2b-9ce9-4688-9c2a-eae996ca5f89","1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69", "1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029", "171629560859755a6814c-eb11-4d29-8bf8-62488b59262f", "1716295891537606dcec9-799b-4463-9d14-7d263992646c"]}',
-        "lshnh": '{"pipeline_id": "49ff9b938d744d299d71112c3ad776d2", "choose_jobs": ["JOB_femhb","JOB_STzDY","JOB_iCFKi","JOB_YFDiz","JOB_wybKt","JOB_GSbrw","JOB_ZyTPf","JOB_XdteN","JOB_cPDNy","JOB_BefDX","JOB_GfHZS","JOB_CbzCy","JOB_Ackpb","JOB_xKYKx","JOB_BRXAc","JOB_sxFGX","JOB_fFCQy","JOB_XkZbc","JOB_mhZsG","JOB_mrCQY","JOB_KDAYk","JOB_zaxxJ"], "choose_stages": ["17161900014471ce96304-6365-4e00-8c1e-136372246a89", "171646779570881e9dc2b-9ce9-4688-9c2a-eae996ca5f89", "1716295607057e725c98b-11a6-4d5d-9289-62b2725e2b69", "171629560859755a6814c-eb11-4d29-8bf8-62488b59262f", "1716190061661a6292fde-0d90-46e2-a91d-afc757a3d029", "17168032167746c5678d4-0eed-4ef2-8fdf-8cecb8bbd878"]}',
-        "retail-nnn": '{"pipeline_id": "third_id", "choose_jobs": [], "choose_stages": []}',
         # "retail-nnn": '{"pipeline_id": "third_id", "choose_jobs": [], "choose_stages": []}',
         # 可以继续添加更多键值对...
     }
@@ -172,8 +163,6 @@ if __name__ == '__main__':
     choose_jobs = data['choose_jobs']
     choose_stages = data['choose_stages']
 
-
-    # webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=d1b408bc9c147c819da6915baac84ac677c2f3cfbb8d2a8f7530b84e4e4974a8'
     webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=425ff9a2f17b8143c46a951ad3eba20ff69e9b615fcb7d4b8b5bdf383dd56568'
     get_pipeline_running_lists(project_id)
     pipeline_run_id = run_pipeline(pipeline_id, project_id, choose_jobs, choose_stages)
