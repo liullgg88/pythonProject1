@@ -106,7 +106,7 @@ def create_selector(token, server_name, service_Env_Name, service_Env_ID):
 
 if __name__ == "__main__":
     username = "admin"
-    password = "Nhsoft_123"
+    password = "xxxxx"
     token = login(username, password)
     Env_Name = input("请输入客户环境名称(小写字母): ").strip()
     Env_ID = input("请输入一个数字，确保shenyu-admin中Divide Order数值唯一: ").strip()
