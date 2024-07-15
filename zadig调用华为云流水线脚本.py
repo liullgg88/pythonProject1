@@ -140,6 +140,26 @@ def get_choose_jobs_and_stages_lists(project_id, pipeline_id):
         print(f"响应 JSON 中缺少键: {e}")
 
 
+def  get_pipeline_id(project_id, dict_key_string):
+    url = f"https://cloudpipeline-ext.cn-east-3.myhuaweicloud.com/v5/{project_id}/api/pipelines/list"
+    payload  = {
+        "offset": 0,
+        "limit": 200
+    }
+    headers = {
+        'Content-Type': 'application/json;charset=UTF-8'
+    }
+    # 使用 sign_request 函数签名请求
+    req = sign_request("POST", url, headers=headers, body=payload)
+    resp = requests.post(req.url, headers=req.headers, data=req.body)
+    resp.raise_for_status()  # 如果响应状态码不是 200，则抛出 HTTPError
+    data = resp.json()
+    for i in data['pipelines']:
+        if i['tag_list']:
+            for item in i['tag_list']:
+                if item['name'] == dict_key_string:
+                    print(i['pipeline_id'])
+                    return i['pipeline_id']
 
 def create_dingtalk_message(title,pipeline_name, start_time, end_time, pipeline_run_status, server_name_string, pipeline_url): # 钉钉消息模板定义
     status_color = {
@@ -234,7 +254,7 @@ if __name__ == '__main__':
         wait_or_execute(pid)
     else:
         pass
-    # 从JSON文件中读取数据
+    # 从JSON文件中读取数据，获取pipeline_id
     with open('data_file.json', 'r', encoding='utf-8') as file:
         loaded_data = json.load(file)
 
@@ -243,6 +263,7 @@ if __name__ == '__main__':
     data = loaded_data[dict_key_string]
     print(data)
     project_id = "8672d4f0470f4eaf8bd75e2589934d21"
+    # pipeline_id = get_pipeline_id(project_id, dict_key_string) #通过标签获取pipeline_id，目前正在测试中。。。。
     pipeline_id = data
     choose_dict = get_choose_jobs_and_stages_lists(project_id, pipeline_id)
     choose_jobs = choose_dict['choose_jobs']
