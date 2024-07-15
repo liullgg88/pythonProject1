@@ -24,6 +24,7 @@ def sign_request(http_method, url, headers=None, body=None): # 获取登录认�
     sig.Sign(req)
     return req
 
+# 通过标签值获取流水线的ID
 def  get_pipeline_id():
     url = "https://cloudpipeline-ext.cn-east-3.myhuaweicloud.com/v5/8672d4f0470f4eaf8bd75e2589934d21/api/pipelines/list"
     payload  = {
@@ -43,7 +44,9 @@ def  get_pipeline_id():
             for item in i['tag_list']:
                 # 标签值为als
                 if item['name'] == "als":
+                    # print(item)
                     # print(i['pipeline_id'])
                     return i['pipeline_id']
 if __name__ == '__main__':
-    get_pipeline_id()
+    x=get_pipeline_id()
+    print(x)
