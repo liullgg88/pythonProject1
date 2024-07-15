@@ -43,7 +43,7 @@ def  get_pipelines_id():
             for item in i['tag_list']:
                 # 标签值为als
                 if item['name'] == "als":
-                    print(i['pipeline_id'])
+                    # print(i['pipeline_id'])
                     return i['pipeline_id']
 if __name__ == '__main__':
     get_pipelines_id()
