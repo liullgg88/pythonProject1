@@ -12,7 +12,7 @@ if [ -z "$pid" ]; then
     pid=2
 fi
 
-# 接收第一个命令行参数作为bookname
+#  接收第一个命令行参数作为bookname
 if [ -z "$1" ]; then
     echo "请提供bookname作为参数"
     exit 1
