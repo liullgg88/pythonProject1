@@ -1,0 +1,2706 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 2,
+  "id": 42,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "f0ae6860-54ef-4090-8903-c1294d41f894"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 74,
+      "options": {
+        "content": "",
+        "mode": "markdown"
+      },
+      "pluginVersion": "7.5.17",
+      "title": "接入层",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "f0ae6860-54ef-4090-8903-c1294d41f894"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 10,
+        "x": 6,
+        "y": 0
+      },
+      "id": 76,
+      "options": {
+        "content": "",
+        "mode": "markdown"
+      },
+      "pluginVersion": "7.5.17",
+      "title": "华为云集群资源层",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "f0ae6860-54ef-4090-8903-c1294d41f894"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 78,
+      "options": {
+        "content": "",
+        "mode": "markdown"
+      },
+      "pluginVersion": "7.5.17",
+      "title": "中间件层",
+      "type": "text"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 66,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(huaweicloud_sys_waf_waf_http_4xx{epId=\"9b108c79-9b8a-40fd-a506-a29ff285db1f\"}) by (epId)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "4XX",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 205,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(huaweicloud_sys_waf_waf_http_5xx{epId=\"9b108c79-9b8a-40fd-a506-a29ff285db1f\"}) by (epId)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "5XX",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 28,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(aom_cluster_cpu_usage{clusterName=\"lm-cce-turbo-new\"}) by (clusterId)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "CPU（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_cluster_memory_usage{clusterName=\"lm-cce-turbo-new\"}) by (clusterId)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "内存（%）",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_cluster_disk_usage{clusterName=\"lm-cce-turbo-new\"}) by (clusterId)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "磁盘（%）",
+          "refId": "C"
+        }
+      ],
+      "title": "集群资源使用量",
+      "type": "gauge"
+    },
+    {
+      "datasource": "MySQL-CronJob",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "失败"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "max",
+                "value": 1000
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 500
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 70,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false,
+        "text": {}
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select SUM(suc_count) suc_count,SUM(fail_count) fail_count from xxl_job_log_report where TO_DAYS(NOW()) - TO_DAYS(trigger_day) = 0",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "xxl_job_group",
+          "timeColumn": "update_time",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "定时任务（XXL-JOB）",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "fail_count": "失败",
+              "suc_count": "成功"
+            }
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 72,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "huaweicloud_sys_dms_instance_accumulation",
+          "format": "heatmap",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "MQ消息堆积量",
+          "refId": "A"
+        }
+      ],
+      "title": "MQ消息堆积量",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "cluster": true,
+              "cluster_category": true,
+              "cluster_name": true,
+              "endpoint": true,
+              "instance": true,
+              "job": true,
+              "namespace": true,
+              "pod": true,
+              "prometheus": true,
+              "reliablemq_groups_topics": true,
+              "reliablemq_instance_id": true,
+              "service": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "MQ消息堆积量": "",
+              "Value": "消息堆积数",
+              "huaweicloud_sys_dms_instance_accumulation{instance=\"localhost:8087\", instanceName=\"lm-RocketMQ-share\", job=\"huaweicloud-middleware\", lm=\"生产-共享1\", reliablemq_instance_id=\"85bd15c6-cbd9-48b3-87ea-08f5e2cd134e\", unit=\"Count\"}": "MQ消息堆积量"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM02",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": -1,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 4
+      },
+      "id": 208,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "sum(irate(nginx_ingress_controller_requests{}[2m]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "QPS",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(irate(nginx_ingress_controller_requests{}[2m] offset 1d))",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "前1天QPS",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Ingress-整体QPS",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 4
+      },
+      "id": 189,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "topk(3,huaweicloud_sys_dms_group_topic_accumulation) ",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{reliablemq_groups}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "消息堆积（Group&Topic）TOP3",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 4
+      },
+      "id": 190,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "topk(3,rate(huaweicloud_sys_dms_dlq_accumulation{}[1d]))",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{reliablemq_dlq_topics}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "产生死信消息的数量（Group&Topic）TOP3",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM02",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 800
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 6,
+        "y": 5
+      },
+      "id": 212,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "count(kube_node_info{cluster_name=\"lm-cce-turbo-new\",node!=\"virtual-kubelet\"}) by (cluster_name)",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{cluster_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Node数量",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM02",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 800
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 8,
+        "y": 5
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "count(kube_pod_info{cluster_name=\"lm-cce-turbo-new\",created_by_kind!~\"<none>|Job\"} )by (cluster_name)",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{cluster_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Pod数量",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 10,
+        "y": 5
+      },
+      "id": 193,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(allocatableCpuUsage{namespace=\"CCE.node_metric\",node_ip!=\"virtual-kubelet\"}) / count(allocatableCpuUsage{namespace=\"CCE.node_metric\",node_ip!=\"virtual-kubelet\"}) / 100",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "CPU分配率",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU超卖（倍）",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 800
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 12,
+        "y": 5
+      },
+      "id": 206,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(allocatableMemoryUsage{namespace=\"CCE.node_metric\",node_ip!=\"virtual-kubelet\"}) / count(allocatableMemoryUsage{namespace=\"CCE.node_metric\",node_ip!=\"virtual-kubelet\"}) / 100",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "内存分配率",
+          "refId": "A"
+        }
+      ],
+      "title": "内存超卖（倍）",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU（%）"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 14,
+        "y": 5
+      },
+      "id": 213,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_cpu_usage{clusterName=\"lm-cce-turbo-new\",nameSpace=\"hwy-apollo-config\",deploymentName=\"apollo-service-hwy-apollo-configservice\"}) by (deploymentName) ",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "CPU（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_memory_usage{clusterName=\"lm-cce-turbo-new\",nameSpace=\"hwy-apollo-config\",deploymentName=\"apollo-service-hwy-apollo-configservice\"}) by (deploymentName)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "内存（%）",
+          "refId": "B"
+        }
+      ],
+      "title": "Apollo使用量",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "color-background",
+            "filterable": true
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点名称"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "auto"
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 6,
+        "y": 8
+      },
+      "id": 185,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "内存使用率（%）"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(aom_node_cpu_usage{clusterName=\"lm-cce-turbo-new\",master!=\"true\"}) by (hostName)",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "CPU使用率（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_node_memory_usage{clusterName=\"lm-cce-turbo-new\",master!=\"true\"}) by (hostName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "内存使用率（%）",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_node_disk_usage{clusterName=\"lm-cce-turbo-new\",master!=\"true\"}) by (hostName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "磁盘使用率（%）",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "aom_node_status{clusterName=\"lm-cce-turbo-new\",master!=\"true\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "节点状态",
+          "refId": "D"
+        }
+      ],
+      "title": "NODE资源情况",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value #A": false,
+              "__name__": true,
+              "cluster": true,
+              "clusterId": true,
+              "clusterName": true,
+              "cluster_category": true,
+              "cluster_name": true,
+              "container": true,
+              "domainname": true,
+              "endpoint": true,
+              "hostID": true,
+              "instance": true,
+              "job": true,
+              "machine": true,
+              "nameSpace": true,
+              "namespace": true,
+              "node": true,
+              "nodeIP": true,
+              "nodeName": true,
+              "pod": true,
+              "prometheus": true,
+              "release": true,
+              "service": true,
+              "sysname": true,
+              "version": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #A": 9,
+              "Value #B": 10,
+              "Value #C": 11,
+              "Value #D": 12,
+              "__name__": 2,
+              "clusterId": 3,
+              "clusterName": 4,
+              "hostID": 5,
+              "hostName": 1,
+              "nameSpace": 6,
+              "nodeIP": 7,
+              "nodeName": 8
+            },
+            "renameByName": {
+              "Value #A": "CPU使用率（%）",
+              "Value #B": "内存使用率（%）",
+              "Value #C": "磁盘使用率（%）",
+              "Value #D": "节点状态（0=正常，1=异常）",
+              "Value #F": "CPU使用率",
+              "Value #G": "内存使用率",
+              "hostName": "节点名称"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "流控次数"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "custom.width",
+                "value": 97
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 138
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "内存使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 123
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "带宽使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 129
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "实例名"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 125
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 16,
+        "y": 8
+      },
+      "id": 52,
+      "maxPerRow": 3,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "内存使用率（%）"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_dcs_cpu_usage{}) by (name) -0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "CPU使用率（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_dcs_memory_usage) by (name) -0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "内存使用率（%）",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_dcs_bandwidth_usage) by (name) -0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "带宽使用率（%）",
+          "refId": "C"
+        },
+        {
+          "exemplar": false,
+          "expr": "avg(huaweicloud_sys_dcs_rx_controlled) by (name) -0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "流控次数",
+          "refId": "D"
+        }
+      ],
+      "title": "REDIS资源使用情况",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #A": 5,
+              "Value #B": 2,
+              "Value #C": 3,
+              "Value #D": 4,
+              "name": 1
+            },
+            "renameByName": {
+              "Value #A": "CPU使用率（%）",
+              "Value #B": "内存使用率（%）",
+              "Value #C": "带宽使用率（%）",
+              "Value #D": "流控次数",
+              "name": "实例名"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 8
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.17",
+      "repeat": null,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "bottomk(3,huaweicloud_sys_dcs_keyspace_hits_perc{epId=\"9b108c79-9b8a-40fd-a506-a29ff285db1f\"}) ",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "命中率（%）-Bottom3",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 11
+      },
+      "id": 186,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "topk(3,huaweicloud_sys_dcs_command_avg_rt{epId=~\"9b108c79-9b8a-40fd-a506-a29ff285db1f\"}) by (name)",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "响应时间（us）-TOP3",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM02",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 13
+      },
+      "id": 209,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(nginx_ingress_controller_requests{status=\"200\"}[2m])) / sum(rate(nginx_ingress_controller_requests{}[2m])) *100",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Ingress总的请求成功率",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM01",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(255, 255, 255)",
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.width",
+                "value": 127
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "percentage",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 90
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "内存使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU内核占用（Core）"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下行Bps"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "上行Bps"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 6,
+        "x": 6,
+        "y": 16
+      },
+      "id": 204,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "内存使用率（%）"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_cpu_usage{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "CPU使用率（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_cpu_used_core{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "CPU内核占用（Core）",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_memory_usage{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "内存使用率（%）",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_memory_used_megabytes{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "物理内存使用量",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_network_receive_bytes{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "下行Bps",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(aom_container_network_transmit_bytes{nameSpace!=\"kube-system\",nameSpace!=\"monitoring\",nameSpace!=\"hwtest-node-dx\",clusterName=\"lm-cce-turbo-new\"}) by (clusterName,nameSpace,deploymentName,podName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "上行Bps",
+          "refId": "F"
+        }
+      ],
+      "title": "POD资源概览",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value #B": false,
+              "Value #C": false,
+              "Value #D": true,
+              "Value #E": false,
+              "clusterName": true,
+              "container": true,
+              "deploymentName": true,
+              "nameSpace": true,
+              "namespace": true,
+              "node": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value #A": 5,
+              "Value #B": 7,
+              "Value #C": 6,
+              "Value #D": 8,
+              "Value #E": 9,
+              "Value #F": 10,
+              "clusterName": 1,
+              "deploymentName": 2,
+              "nameSpace": 3,
+              "podName": 4
+            },
+            "renameByName": {
+              "Time": "",
+              "Value": "内存使用率",
+              "Value #A": "CPU使用率（%）",
+              "Value #B": "CPU内核占用（Core）",
+              "Value #C": "内存使用率（%）",
+              "Value #D": "物理内存使用量",
+              "Value #E": "下行Bps",
+              "Value #F": "上行Bps",
+              "container": "",
+              "namespace": "命名空间",
+              "node": "",
+              "pod": "pod名称",
+              "podName": "Pod",
+              "{clusterName=\"lm-cce-turbo\", deploymentName=\"amazoncenter-task\", nameSpace=\"xxl-job\", podName=\"amazoncenter-task-65654fb6f9-qqlbh\"}": "内存使用量",
+              "{clusterName=\"lm-cce-turbo-new\", deploymentName=\"ack-onepilot-ack-onepilot\", nameSpace=\"ack-onepilot\", podName=\"ack-onepilot-ack-onepilot-9b5768b64-hwbvs\"}": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "Prometheus-HuaWeiCloud-AOM02",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(255, 255, 255)",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "color-text",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "重启次数"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 3
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PDO名称"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 195
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 4,
+        "x": 12,
+        "y": 16
+      },
+      "id": 12,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "重启次数"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(kube_pod_container_status_restarts_total{namespace!=\"kube-system\",cluster_name=\"lm-cce-turbo-new\"}) by (pod,namespace) >0",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "title": "POD重启次数",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "namespace": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Time": "",
+              "Value": "重启次数",
+              "namespace": "命名空间",
+              "pod": "PDO名称"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 16
+      },
+      "id": 187,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql074_slow_queries{}) by (gaussdb_mysql_instance_id)",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{gaussdb_mysql_instance_id}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "数据库每秒慢查询数",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 16
+      },
+      "id": 188,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql008_qps{}) by (gaussdb_mysql_instance_id) -0",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{gaussdb_mysql_instance_id}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "QPS",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": -1,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 21
+      },
+      "id": 210,
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right"
+        },
+        "tooltipOptions": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "rate(shenyu_request_total{}[5m])",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "SHENYU-整体QPS",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus-HuaweiCloud-CES",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 91
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "内存使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 111
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "磁盘使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 194
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点名"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 101
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "连接数使用率（%）"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "custom.width",
+                "value": 117
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "实例名"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 139
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点ID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 293
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 21
+      },
+      "id": 56,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "内存使用率（%）"
+          }
+        ]
+      },
+      "pluginVersion": "7.5.17",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql001_cpu_util{}) by (instanceName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "CPU使用率（%）",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql002_mem_util{}) by (instanceName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "内存使用率（%）",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql119_disk_used_ratio{}) by (instanceName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "磁盘使用率（%）",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(huaweicloud_sys_gaussdb_gaussdb_mysql072_conn_usage{}) by (instanceName)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "连接数使用率（%）",
+          "refId": "D"
+        }
+      ],
+      "title": "GaussDB MySQL资源使用情况 ",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "cluster": true,
+              "cluster_category": true,
+              "cluster_name": true,
+              "endpoint": true,
+              "engineName": true,
+              "epId": true,
+              "gaussdb_mysql_instance_id": true,
+              "gaussdb_mysql_node_id": false,
+              "innerIp": true,
+              "innerPort": true,
+              "instance": true,
+              "instanceName": false,
+              "job": true,
+              "lm": true,
+              "namespace": true,
+              "pod": true,
+              "prometheus": true,
+              "role": true,
+              "service": true,
+              "unit": true
+            },
+            "indexByName": {
+              "Time": 1,
+              "Value #A": 3,
+              "Value #B": 4,
+              "Value #C": 5,
+              "Value #D": 2,
+              "instanceName": 0
+            },
+            "renameByName": {
+              "Value": "CPU使用率（%）",
+              "Value #A": "CPU使用率（%）",
+              "Value #B": "内存使用率（%）",
+              "Value #C": "磁盘使用率（%）",
+              "Value #D": "连接数使用率（%）",
+              "Value #E": "网络输入吞吐量",
+              "Value #F": "网络输出吞吐量",
+              "__name__": "",
+              "gaussdb_mysql_instance_id": "实例ID",
+              "gaussdb_mysql_node_id": "节点ID",
+              "instanceName": "实例名",
+              "job": "",
+              "lm": "",
+              "name": "节点名",
+              "role": "",
+              "{instanceName=\"lm-kxnc-dx\"}": "连接数使用率（%）",
+              "磁盘使用率（%）": "磁盘使用率（%）",
+              "连接数使用率（%）": "连接数使用率（%）"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "0-HuaweiCloud Overview Dashboard-0428",
+  "uid": "TvDinfBIz",
+  "version": 57
+}
