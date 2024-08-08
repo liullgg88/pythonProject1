@@ -151,17 +151,43 @@ def  get_pipeline_id(project_id, dict_key_string):
     }
     # 使用 sign_request 函数签名请求
     req = sign_request("POST", url, headers=headers, body=payload)
-    resp = requests.post(req.url, headers=req.headers, data=req.body)
-    resp.raise_for_status()  # 如果响应状态码不是 200，则抛出 HTTPError
-    data = resp.json()
-    for i in data['pipelines']:
-        if i['tag_list']:
-            for item in i['tag_list']:
-                if item['name'] == dict_key_string:
-                    print(i['pipeline_id'])
-                    return i['pipeline_id']
-
-def create_dingtalk_message(title,pipeline_name, start_time, end_time, pipeline_run_status, server_name_string, pipeline_url): # 钉钉消息模板定义
+    try:
+        resp = requests.post(req.url, headers=req.headers, data=req.body)
+        resp.raise_for_status()  # 如果响应状态码不是 200，则抛出 HTTPError
+        data = resp.json()
+        pattern_general = dict_key_string
+        matched_pipelines = []
+        for pipeline in data.get('pipelines', []):
+            matches = re.findall(pattern_general, pipeline.get('name', ''))
+            if matches:  # 如果找到匹配项
+                x = "%s:%s" % (pipeline.get("name"), pipeline.get("pipeline_id"))
+                matched_pipelines.append(x)
+        # print(matched_pipelines)
+        if len(matched_pipelines) >= 2:
+            for item in matched_pipelines:
+                if '自动化测试' in item:  # 直接使用 in 操作符检查 'pay' 是否在字符串中
+                    pipeline_id = item.split(":")[-1]
+                    return pipeline_id
+        elif len(matched_pipelines) == 1:
+            pipeline_id = matched_pipelines[0].split(":")[-1]
+            print(pipeline_id)
+            return pipeline_id
+        else:
+            print("没有找到相关的流水线")
+    except requests.RequestException as e:
+        print(f"Error fetching pipeline ID: {e}")
+        return None
+    # try:
+    #     resp = requests.post(req.url, headers=req.headers, data=req.body)
+    #     resp.raise_for_status()  # 如果响应状态码不是 200，则抛出 HTTPError
+    #     data = resp.json()
+    #     for pipeline in data.get('pipelines', []):
+    #         if pipeline['name'].split("-")[-1] == dict_key_string:
+    #             return pipeline['pipeline_id']
+    # except requests.RequestException as e:
+    #     print(f"Error fetching pipeline ID: {e}")
+    #     return None
+def create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline_run_status, server_name_string, url): # 钉钉消息模板定义
     status_color = {
         "COMPLETED": "#32CD32",
         "FAILED": "#FF0000",
@@ -175,7 +201,7 @@ def create_dingtalk_message(title,pipeline_name, start_time, end_time, pipeline_
                f"> **开始时间:** {start_time}\n\n" \
                f"> **结束时间:** {end_time}\n\n" \
                f"> **运行状态:** <font color={color}>{pipeline_run_status}</font>\n\n" \
-               f"> **链接:** [**查看详情**]({pipeline_url})\n\n" \
+               f"> **链接:** [**查看详情**]({url})\n\n" \
                f"> **此流水线由{server_name_string}等触发**\n\n" \
                f"> **自动化测试** "
     else:
@@ -183,7 +209,7 @@ def create_dingtalk_message(title,pipeline_name, start_time, end_time, pipeline_
                f"> **工作流名称:** {pipeline_name}\n\n" \
                f"> **开始时间:** {start_time}\n\n" \
                f"> **运行状态:** <font color={color}>{pipeline_run_status}</font>\n\n" \
-               f"> **工作流链接:** [**查看详情**]({task_url})\n\n" \
+               f"> **工作流链接:** [**查看详情**]({url})\n\n" \
                f"> **此流水线由{server_name_string}等触发**\n\n" \
                f"> **自动化测试** "
     return {
@@ -225,6 +251,7 @@ def wait_or_execute(pid): # 等待是否执行
         print(f"Process {pid} has exited.")
     else:
         print(f"Process {pid} does not exist, executing command: ")
+
 def get_string(x):  # 字符串处理
     components = x.split(',')
     list = []
@@ -237,7 +264,10 @@ def get_string(x):  # 字符串处理
     return server_name_string
 
 if __name__ == '__main__':
+    # webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=d1b408bc9c147c819da6915baac84ac677c2f3cfbb8d2a8f7530b84e4e4974a8'
+    webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=425ff9a2f17b8143c46a951ad3eba20ff69e9b615fcb7d4b8b5bdf383dd56568'
     parser = argparse.ArgumentParser(description='zadig调用codearts流水线信息的脚本')
+
     # 添加参数
     parser.add_argument('--u', '--u', type=str, required=True, help='商户名称')
     parser.add_argument('--p', '--p', type=int, required=True, help='前面运行的本脚本PID进程')
@@ -249,50 +279,56 @@ if __name__ == '__main__':
     # 提取并使用参数
     dict_key_string = args.u  # 也可以使用 args.u，但建议使用更具描述性的名称
     pid = args.p
-    servre_name = args.s
+    service_name = args.s
     if pid != 2:
         wait_or_execute(pid)
     else:
         pass
-    # 从JSON文件中读取数据，获取pipeline_id
-    with open('data_file.json', 'r', encoding='utf-8') as file:
-        loaded_data = json.load(file)
+    # 这些需要从外部传入
+    task_url = "https://devops.nhsoft.cn/v1/projects/detail/earth-ama/pipelines/custom/ceshihuanjing-bushu/1564?display_name=%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83-%E9%83%A8%E7%BD%B2"
+    # 原始时间戳字符串，以毫秒为单位
+    start_time_str = '1718939276'
+    # 将字符串转换为整数，并除以1000以获得秒级的时间戳
+    start_time_int = int(start_time_str)
+    # 使用fromtimestamp方法将时间戳转换为datetime对象
+    start_time = datetime.fromtimestamp(start_time_int)
+    # 将传入的参数进行进一步的处理
+    service_name_string = get_string(service_name)
 
-    # 访问特定键的数据并解析其JSON字符串值
-    # print(loaded_data)
-    data = loaded_data[dict_key_string]
-    print(data)
     project_id = "8672d4f0470f4eaf8bd75e2589934d21"
-    # pipeline_id = get_pipeline_id(project_id, dict_key_string) #通过标签获取pipeline_id，目前正在测试中。。。。
-    pipeline_id = data
-    choose_dict = get_choose_jobs_and_stages_lists(project_id, pipeline_id)
-    choose_jobs = choose_dict['choose_jobs']
-    choose_stages = choose_dict['choose_stages']
-
-
-    # webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=d1b408bc9c147c819da6915baac84ac677c2f3cfbb8d2a8f7530b84e4e4974a8'
-    webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=425ff9a2f17b8143c46a951ad3eba20ff69e9b615fcb7d4b8b5bdf383dd56568'
-    server_name_string = get_string(servre_name)
-    get_pipeline_running_lists(project_id)
-    pipeline_run_id = run_pipeline(pipeline_id, project_id, choose_jobs, choose_stages)
-    if pipeline_run_id:
-        title = "开始"
-        task_url="https://devops.nhsoft.cn/v1/projects/detail/earth-ama/pipelines/custom/ceshihuanjing-bushu/1564?display_name=%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83-%E9%83%A8%E7%BD%B2"
-        # 原始时间戳字符串，以毫秒为单位
-        start_time_str = '1718939276'
-        # 将字符串转换为整数，并除以1000以获得秒级的时间戳
-        start_time_int = int(start_time_str)
-        # 使用fromtimestamp方法将时间戳转换为datetime对象
-        start_time = datetime.fromtimestamp(start_time_int)
-        pipeline_name="正式环境-更新"
-        pipeline_status="RUNNING"
-        end_time=""
+    pipeline_id = get_pipeline_id(project_id, dict_key_string) #通过标签获取pipeline_id，目前正在测试中。。。。
+    print(pipeline_id)
+    if pipeline_id :
+        choose_dict = get_choose_jobs_and_stages_lists(project_id, pipeline_id)
+        choose_jobs = choose_dict['choose_jobs']
+        choose_stages = choose_dict['choose_stages']
+    else:
+        title = "失败"
+        pipeline_name = "正式环境-更新"
+        pipeline_status = "没有对应的标签,请给流水线添加对应的标签"
+        end_time = ""
         message = create_dingtalk_message(title,
                                           pipeline_name,
                                           start_time,
                                           end_time,
                                           pipeline_status,
-                                          server_name_string,
+                                          service_name_string,
+                                          task_url)
+        response_text = send_dingtalk_message(webhook_url, message)
+        sys.exit(1)
+    get_pipeline_running_lists(project_id)
+    pipeline_run_id = run_pipeline(pipeline_id, project_id, choose_jobs, choose_stages)
+    if pipeline_run_id:
+        title = "开始"
+        workflow_name="正式环境-更新"
+        pipeline_status="RUNNING"
+        end_time=""
+        message = create_dingtalk_message(title,
+                                          workflow_name,
+                                          start_time,
+                                          end_time,
+                                          pipeline_status,
+                                          service_name_string,
                                           task_url)
         response_text = send_dingtalk_message(webhook_url, message)
         pipeline_status = get_pipeline_status(project_id, pipeline_id, pipeline_run_id)
@@ -303,7 +339,7 @@ if __name__ == '__main__':
                                               pipeline_status['start_time'],
                                               pipeline_status['end_time'],
                                               pipeline_status['pipeline_run_status'],
-                                              server_name_string,
+                                              service_name_string,
                                               pipeline_url=f"https://devcloud.cn-east-3.huaweicloud.com/cicd/project/{project_id}/pipeline/detail/{pipeline_id}/{pipeline_run_id}?v=1")
             response_text = send_dingtalk_message(webhook_url, message)
             if pipeline_status['pipeline_run_status'] != "COMPLETED":
