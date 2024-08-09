@@ -1,0 +1,134 @@
+问题描述&解决过程：
+6.21 上午，
+
+商户：杰记水果（4557）# HWB，乐檬新零售V2 ---积分商城 ---点击页面链接 --- 概率报错，报错时，显示报错信息 为：
+
+请检查:I/O error on GET request for "https://report-center.nhsoft.cn/report-center/apis/mer2.HWB/singlepromotionsoldamount": Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out
+
+即：华为云环境，杰记水果 ---水星服务(hwb-merv2-server 工作负载)
+
+连接 阿里云环境 报表服务 (https://report-center.nhsoft.cn/report-center/apis/mer2.HWB/singlepromotionsoldamount)
+
+报错：Read timed out; nested exception is java.net.SocketTimeoutException: Read timed out
+
+6.25 号，
+
+从华为云后端 获知，6.24 有频繁的入网超带宽，华为云VIP地址—华为云NAT网关—访问阿里云业务，(请求 出方向，回复 入方向)，有一方不通 会导致整个请求失败。
+
+带宽超限 会导致偶发丢包，丢包时 这个请求由于一直收不到回复，就会出现 timeout的情况。建议 提升EIP的带宽。由于上述出现问题的业务，有调用阿里业务数据。入网超带宽 也会影响请求。
+
+7.11 号，
+
+华为云公网NAT网关 IP，最近两周 一直有 超带宽现象（在11点、13点、15点、23点之后比较频繁），超带宽会导致偶发丢包现象，建议 公网适当增加一些带宽(观察效果)；
+
+也可以考虑 使用专线或者VPN 访问，走内网 相对比公网要稳定些，但 需 一定费用。
+
+--> 7.11，16：30，华为云测公网NTA网关 IP，带宽 调整至最大 700Mbit/s。7.12 号，客户反馈：华为云B环境 有好转，华为云A环境 3天内未发生。
+
+7.21 号，
+
+客户反馈：问题仍有发生，华为云测商户(YSF、HWB、LSHNH、HWA ...)水星应用 访问阿里云测共享服务 依然有 timedout 问题。需尽快解决此 timeout问题。
+
+华为云测排查：近7天，(公网NAT网关所绑定的) IP，入网带宽、出网带宽，最高值均未超过700Mbit/s。近七天，公网NAT网关，带宽使用率 也在 范围内。且 无丢包现象（丢包数为0）。
+
+整体网络流程：华为云NAT网关IP --->华为云NAT网关 --->公网（阿里云 的相关网址）。前两者 看监控，均无问题。
+
+查看 拨测监控(看 网络有无波动)，通过 ping报错域名 解析ip为120.26.91.58 ，查询 此ip归属地是 苏州阿里云，查询 上海1 --> 阿里云对应拨测监控，没有丢包和延迟的波动(近7天)，（对应的拨测监控,是由 华为云上海一 60.204.187.134 ping 118.178.15.242 的数据。）
+
+目前，华为云测网络连通性方面，经排查 没问题。
+
+7.25 号，
+
+依然是 timeout报错问题：华为云测商户，乐檬新零售V2 --- 商品中心，查询，报错；或 商品库加载商品缓慢。报错时，报错信息为：请检査:1/0 error on GET reguest for "https://report-centernhsoft.cn/report-center/apis/mer2.ySF/basicsoldamount": Read timed out; nested exception is java.net.SocketTimeoutException:Read timed out- ；华为云独享环境，乐檬零售APP ---查询商品分析 ---查看明细 ---选择日期时间，查询 报错问题。（报错表现为：数据一直查询不出来，一直转圈，到最后直接报错了。）；阿里云测应用调用页面：ysf-merv2-server 外部调用 report-center.nhsoft.cn报表服务 存在超时(30s)异常数据；应用实时监控服务ARMS 调用链分析 存在 华为云测商户(YSF) 连接阿里云测服务(授权服务、订单聚合服务)，接口调用 超时数据。Elastic上 相关timed out日志 等。
+
+总结为：乐檬华为云测应用 访问阿里云共享服务 的 概率性(或者说偶发)超时 的问题。
+
+8.2 上午，
+
+华为云测 后端人员，进行 华为云测网络链路 抓包，及 访问阿里云共享服务的华为云应用工作负载实例，长ping 阿里云测域名：
+
+华为云测网络链路为：eni网卡 — 宿主机网口 — eip出口 （于 这三处 抓包）
+
+注释：容器 eni网卡出口、容器所在虚拟机 虚拟机所在宿主机(即 物理机)的网口、EIP(所绑定 公网NAT网关的IP)网卡出口。
+
+其中，长ping 操作，做为 华为云测网络链路抓包分析的 一部分。可 辅助帮助定位问题。关于 长ping 的操作：有如下 可依据实际结果推断的结论：
+
+1.如 客户业务日志报错timeout 的时间分布，与 ping出现丢包的时间相吻合，则可推理出 报错依然是由于 网络波动或链路丢包。
+
+2.如 客户业务日志报错timeout，同一时间 ping并未出现丢包，则可推理出 报错与网络连通性 并不相关，需排查、分析 客户业务。
+
+8.5 号，
+
+华为云测 网络链路抓包，后端人员给出如下结论：
+
+1、抓包期间，客户业务日志报错 time out时间点，于华为云测 容器eni网卡出口处的 抓包，均有发现：发包时，连接复用 但丢包重传 的现象。
+
+2、客户业务日志报错 time out时间，长ping 及 其他TCP连接通信 未发现异常，未发现 大量丢包。
+
+*3、当前，怀疑 因服务端已拆链 但客户端容器未感知而复用TCP链接发送数据报文，导致 被服务端丢弃。服务端 未进行抓包，无法在对端 确认。
+
+*4、需 结合客户端业务所使用的 RestTemplate相关配置，及服务端连接复用相关配置 进行确认。
+
+客户反馈如下：客户 业务服务端，Web框架 为：Spring MVC 。
+
+客户 客户端业务应用 的 RestTemplate 配置：
+
+public RestTemplate restTemplate(RestTemplateBuilder builder) {
+return builder
+.setConnectTimeout(Duration.ofSeconds(10))
+.setReadTimeout(Duration.ofSeconds(30))
+.requestFactory(this::clientHttpRequestFactory)
+.build();
+}
+
+public ClientHttpRequestFactory clientHttpRequestFactory() {
+HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory(
+HttpClients.custom()
+.setConnectionManager(clientConnectionManager())
+.build()
+);
+
+httpRequestFactory.setConnectTimeout(10000);
+httpRequestFactory.setReadTimeout(30000);
+httpRequestFactory.setConnectionRequestTimeout(5000);
+return httpRequestFactory;
+}
+
+public PoolingHttpClientConnectionManager clientConnectionManager() {
+PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
+manager.setDefaultMaxPerRoute(80);
+manager.setMaxTotal(200);
+manager.setValidateAfterInactivity(15000);
+return manager;
+}
+
+8.6 号，
+
+根据抓包结果，及 RestTemplate相关配置 等。后端老师 给出如下两种方案( 二选一 ) 解决timeout问题：
+
+方案一：调整 TCP链接复用策略(需要调整代码、重新部署等)。
+
+方案二：华为云容器安全组(入方向) 放通 阿里侧服务端域名解析IP。
+
+8.6 中午，
+
+经 与客户沟通，于 11：50 执行 方案二：即 sms-center.nhsoft.cn、mercury-node-center.nhsoft.cn、ishop-server.lemengcloud.com、allpay-share.lemeng.center、finance-server.nhsoft.cn、report-center.nhsoft.cn ...
+
+--> 这些域名解析IP（120.26.91.58、47.98.240.243、101.37.34.213）加入容器安全组入方向（放通了）。
+
+8.7 号，
+
+经过整天的观察（Elastic日志、ARMS监控...），已反馈：timeout问题 解决了。
+
+问题原因：
+云服务厂商的安全组，会涉及到 连接跟踪表的概念。一般 默认安全组，是 出方向全通，入方向 不通。TCP通信 的报文 有来 也有回，对默认安全组来说，出方向 全放通，而 回包时，我们知道，默认安全组的入方向规则 并未放通 服务端IP，但是，由于 安全组有着连接跟踪表 机制，即 安全组的连接跟踪表里 记录着 这条出方向请求 的源IP、目的IP，回包时的"源IP" 因在连接跟踪表中存在(记录) 而会被 放行。
+
+默认情况下，华为云的 安全组连接跟踪表 过期时间是10分钟(即 600s)，代表着：某次连接 在10min内 没有报文通信，就会被 连接跟踪表 以连接老化 来清理掉，而此时，客户端 往外发的包 可以 通，但 从服务端发来的包 则会被安全组拦截。
+
+当前，应用客户端 已有使用长连接，但 未开启保活，无法 维持TCP连接。当 连接闲置时间 超过10min后，服务端 主动发起 fin包断链，但 由于安全组的连接跟踪表，10min后 已老化清理，以及 安全组中 又未放通服务端IP，导致 fin包未送达 容器。所以 客户端感知不到 已断链，其 会继续使用 该TCP连接发送报文，而 服务端 收到 这些报文 会丢弃（因为服务端已经认为 该TCP断链了)，客户端 重传报文多次 达30s时，服务端仍未收到新链的包，触达服务端 套接字读超时时间（相应 RestTemplate配置为：setReadTimeout(Duration.ofSeconds(30) )，从而导致 Elastic日志报错、阿里云测应用调用、ARMS应用调用链 出现异常数据、继而 触发告警。
+
+解决办法&原理：
+办法：华为云容器安全组(入方向) 放通 阿里侧服务端域名解析IP。
+
+原理：当前，华为云测 容器 为eni网卡，网络链路为：eni网卡 – 宿主机网口 – eip出口，容器安全组 放通服务端IP后：连接跟踪表 同样10min 到期清理，但服务端发送的 fin包断链报文 可以被安全组放通，从而到达 客户端，因此，客户端 感知到了断链，后续便 不会再使用该链发包，也就不会再出现 timeout报错问题。
+

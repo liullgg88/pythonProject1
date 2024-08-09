@@ -53,18 +53,14 @@ def get_choose_jobs_and_stages_lists():
 
                     # 检查是否有作业
                 if "jobs" in stage:
-                    # 遍历作业
                     for job in stage['jobs']:
-                        # 收集作业标识符
                         if "identifier" in job:
                             choose_jobs_list.append(job['identifier'])
 
             choose_jobs_and_stages_dict["choose_jobs"]=choose_jobs_list
             choose_jobs_and_stages_dict["choose_stages"] = choose_stages_list
-            # 打印结果
+
             return choose_jobs_and_stages_dict
-            # print("Choose Jobs List:", choose_jobs_list)
-            # print("Choose Stages List:", choose_stages_list)
         else:
             print("响应 JSON 中缺少 'definition' 键")
     except requests.RequestException as e:
