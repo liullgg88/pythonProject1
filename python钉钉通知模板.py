@@ -94,3 +94,4 @@ if __name__ == '__main__':
     server_name_string="xxxxxx"
     url="https://oapi.dingtalk.com"
     create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline_run_status, ruleContents, server_name_string, url)
+
