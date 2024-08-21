@@ -283,6 +283,7 @@ def create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline
     fate = ruleContents.split("/")[-1]
     if title=="结束":
         if pipeline_run_status=="FAILED":
+            notification_phone_list = module_dict.get(module_name, None)
             text = f"### CodeArts Pipeline执行{title}\n\n" \
                    f"> **流水线名称:** {pipeline_name}\n\n" \
                    f"> **开始时间:** {start_time}\n\n" \
@@ -293,6 +294,7 @@ def create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline
                    f"> **此流水线由{server_name_string}等触发**\n\n" \
                    f"> **自动化测试**  \n\n"
         else:
+            notification_phone_list = []
             text = f"### CodeArts Pipeline执行{title}\n\n" \
                    f"> **流水线名称:** {pipeline_name}\n\n" \
                    f"> **开始时间:** {start_time}\n\n" \
@@ -302,6 +304,7 @@ def create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline
                    f"> **此流水线由{server_name_string}等触发**\n\n" \
                    f"> **自动化测试**  \n\n"
     else:
+        notification_phone_list = []
         text = f"### CodeArts Pipeline执行{title}\n\n" \
                f"> **工作流名称:** {pipeline_name}\n\n" \
                f"> **开始时间:** {start_time}\n\n" \
@@ -309,7 +312,7 @@ def create_dingtalk_message(title, pipeline_name, start_time, end_time, pipeline
                f"> **工作流链接:** [**查看详情**]({url})\n\n" \
                f"> **此流水线由{server_name_string}等触发**\n\n" \
                f"> **自动化测试** \n\n"
-    notification_phone_list = ["17612843195"]
+
     result = ding_talk.send_markdown(title, text, at_mobiles=notification_phone_list, is_at_all=False)
     if result['errmsg'] == 'ok':
         print('通知成功')
