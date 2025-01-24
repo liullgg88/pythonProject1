@@ -77,19 +77,6 @@ str_time = "%s-%s-%s" % (datetime.datetime.now().year,
 time_mail = time.strftime('%Y%m%d%H%M%S ', time.localtime(time.time()))
 # 发送邮件相关信息
 sender = '17612843195@163.com'
-# 收件人邮箱列表
-# recipients = [
-#     "546651847@qq.com",
-#     "liuliangliang@visionblue.cn",
-#     "maoxianhua@visionblue.cn",
-#     # 添加更多收件人邮箱地址
-# ]
-# password = "DRRnswUXMfGSm3Nq"  # 注意：对于Gmail，您可能需要生成应用专用密码
-# smtp_server = "smtp.163.com"
-# smtp_port = 465  # 对于TLS，如果是SSL则为465
-# 收件人邮箱
-# receiver = '546651847@qq.com'
-# receiver = 'wangzq@icbf.com.cn','yangyang@icbf.com.cn'
 # 接收邮件的邮箱
 receiver  = ['546651847@qq.com',"liuliangliang@visionblue.cn"]
 subject = '%s运维巡检表' % (str_time)
