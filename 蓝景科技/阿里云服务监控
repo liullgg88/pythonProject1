@@ -1,1 +1,623 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from HTMLTable import (HTMLTable, )
+from email.mime.multipart import MIMEMultipart
 
+import paramiko
+from clickhouse_driver import Client, connect
+import smtplib
+from smtplib import SMTP_SSL
+import string
+import json
+import requests
+import time
+import datetime
+import prettytable as pt
+from ntpath import join
+from email.header import Header
+from aliyunsdkcore import client
+from email.mime.text import MIMEText
+from aliyunsdkcore.request import CommonRequest
+from aliyunsdkecs.request.v20140526 import DescribeInstancesRequest
+from aliyunsdkcore.acs_exception.exceptions import ClientException
+from aliyunsdkcore.acs_exception.exceptions import ServerException
+from aliyunsdkcms.request.v20190101.DescribeMetricTopRequest import DescribeMetricTopRequest
+from aliyunsdkr_kvstore.request.v20150101.DescribeInstancesRequest import \
+    DescribeInstancesRequest as DescribeInstancesRequest2
+from aliyunsdkdts.request.v20200101.DescribeDtsJobsRequest import DescribeDtsJobsRequest
+from aliyunsdkr_kvstore.request.v20150101.DescribeInstanceAttributeRequest import DescribeInstanceAttributeRequest
+
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from aliyunsdkcms.request.v20190101.DescribeMetricListRequest import DescribeMetricListRequest
+import pdfkit
+import os
+# 脚本所需参数
+
+### 时间相关参数
+# 统计周期，单位小时
+duration = 72
+tick_spacing = 90
+# step1 获取时间
+t = datetime.datetime.now()
+# 当前日期
+t1 = t.strftime('%Y-%m-%d %H:%M:%S')
+# 转为秒级时间戳
+ts1 = time.mktime(time.strptime(t1, '%Y-%m-%d %H:%M:%S'))
+# 转为毫秒级
+EndTime = int(str(ts1 * 1000).split(".")[0])
+# 1小时前
+t2 = (t - datetime.timedelta(hours=duration)).strftime("%Y-%m-%d %H:%M:%S")
+# 转为秒级时间戳
+ts2 = time.mktime(time.strptime(t2, '%Y-%m-%d %H:%M:%S'))
+# 转为毫秒级
+StartTime = int(str(ts2 * 1000).split(".")[0])
+
+# 脚本所需参数
+# 设置页数
+page_number = '1'
+# 设置每页返回多少，默认为10条
+strip_number = '100'
+# ECS到期时间范围单位是‘天’
+expire_days = '7'
+# 云服务的数据命名空间(磁盘使用率那进行调用)
+ecs_namespace = 'acs_ecs_dashboard'
+# 云服务(ECS)的监控项名称
+Disk_metricname = 'vm.DiskUtilization'  # 磁盘
+Mem_metricname = 'vm.MemoryUtilization'  # 内存
+CPU_metricname = 'cpu_total'  # CPU
+# 磁盘使用率阀值(%)
+Disk_use_rate = '70'
+# 内存使用率阀值(%)
+Mem_user_rate = '70'
+# CPU使用率阀值(%)
+Cpu_user_rate = '70'
+str_time = "%s-%s-%s" % (datetime.datetime.now().year,
+                         datetime.datetime.now().month, datetime.datetime.now().day)
+time_mail = time.strftime('%Y%m%d%H%M%S ', time.localtime(time.time()))
+# 发送邮件相关信息
+sender = '17612843195@163.com'
+# 收件人邮箱列表
+# recipients = [
+#     "546651847@qq.com",
+#     "liuliangliang@visionblue.cn",
+#     "maoxianhua@visionblue.cn",
+#     # 添加更多收件人邮箱地址
+# ]
+# password = "DRRnswUXMfGSm3Nq"  # 注意：对于Gmail，您可能需要生成应用专用密码
+# smtp_server = "smtp.163.com"
+# smtp_port = 465  # 对于TLS，如果是SSL则为465
+# 收件人邮箱
+# receiver = '546651847@qq.com'
+# receiver = 'wangzq@icbf.com.cn','yangyang@icbf.com.cn'
+# 接收邮件的邮箱
+receiver  = ['546651847@qq.com',"liuliangliang@visionblue.cn"]
+subject = '%s运维巡检表' % (str_time)
+# 邮箱账户命密码
+username = '17612843195@163.com'
+password = "xxxx"
+
+'''
+阿里云采样范围太大就会提示(是因为每个月阿里云api是有固定免费额度的)
+{"status":"error","errorType":"execution",
+"error":"query processing would load too many samples into memory in query execution"}
+'''
+
+
+# 生成表格
+def form(column_name, field_information, title,image_urls):
+    table = HTMLTable(caption='')
+    table.append_header_rows(((column_name),))
+    for field in field_information:
+        table.append_data_rows(((field),))
+    # 表格样式，即<table>标签样式
+    table.set_style({
+        'border-collapse': 'collapse',
+        'word-break': 'keep-all',
+        'white-space': 'nowrap',
+        'font-size': '14px',
+        'margin-left': '30px',
+        'text-align': 'center',
+    })
+    # 统一设置所有单元格样式，<td>或<th>
+    table.set_cell_style({
+        'border-color': '#000',
+        'border-width': '1px',
+        'border-style': 'solid',
+        'padding': '5px',
+    })
+    # 表头样式
+    table.set_header_row_style({
+        'color': '#fff',
+        'background-color': '#48a6fb',
+        'font-size': '18px',
+    })
+
+    # 覆盖表头单元格字体样式
+    table.set_header_cell_style({
+        'padding': '15px',
+    })
+    html = table.to_html()
+    image_pairs_html = []
+    for i in range(0, len(image_urls), 2):
+        second_image_html = (
+            f'<img src="{image_urls[i + 1]}" alt="Table Image" style="max-width: 45%; height: auto;">'
+            if i + 1 < len(image_urls) else ''
+        )
+        pair_html = (
+            f'<div style="display: flex; gap: 10px; margin-left: 30px; margin-top: 10px;">'
+            f'  <img src="{image_urls[i]}" alt="Table Image" style="max-width: 45%; height: auto;">'
+            f'  {second_image_html}'
+            f'</div>'
+        )
+        image_pairs_html.append(pair_html)
+    images_html = ''.join(image_pairs_html)
+    # 组合标题、表格和图片的HTML字符串
+    html = (
+            f'<h3 style="color:red;margin-left: 30px;">{title}</h3>'
+            + html  # 表格的HTML代码
+            + '<div style="margin-left: 30px;">' + images_html + '</div>'
+    )
+    return html
+
+
+# 把巡检信息进行html格式化
+def html_formatting(Aliyun_html):
+    html_text = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="page" style="margin-left: 20px">
+        <h1> {time_mail} 巡检结果如下 </h1>
+        <h2 style="color:blue;margin-left: 15px"> 蓝景科技阿里云服务巡检 </h2>
+        {Aliyun_html}
+        </div>
+    </div>
+</body>
+</html>
+""".format(
+        time_mail=str_time,
+        Aliyun_html=Aliyun_html,
+    )
+    msge = html_text
+    return msge
+
+zones=["cn-hangzhou","cn-beijing"]
+# 阿里云认证
+def get_clt(zone):
+    clt = client.AcsClient("xxxx", "xxxx", zone)
+    return clt
+# 列表---ECS列表
+def get_sys_info(zone):
+    request = DescribeInstancesRequest.DescribeInstancesRequest()
+    # request.set_PageNumber('page_number')   #设置页数
+    request.set_PageSize(strip_number)  # 设置每页返回多少，默认为10条
+    request.set_accept_format('json')
+    response = json.loads(get_clt(zone).do_action(request)).get(
+        'Instances').get('Instance')
+    return response
+
+
+def get_ecs_info(zone):
+    ecs_info = []
+    for file_info in get_sys_info(zone):
+        # print(file_info)
+        information = {}
+        information["InstanceId"]=file_info["InstanceId"]
+        information["InstanceName"] = file_info["InstanceName"]
+        ecs_info.append(information)
+        # print(information)
+    return ecs_info
+
+def get_image_urls():
+    for zone in zones:
+        for item in get_ecs_info(zone):
+            # print(item)
+            generate_image(item['InstanceId'], item['InstanceName'],
+                           ["cpu_total", "memory_usedutilization", ["DiskReadIOPS", "DiskWriteIOPS"]],
+                           tick_spacing,zone)
+    print("")
+    # 支持的图片扩展名
+    image_extensions = ['.jpg']
+    folder_path ="picture/ECS/"
+    # 存储图片文件名称的列表
+    image_urls = []
+    # 遍历文件夹
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            # 检查文件扩展名是否在支持的列表中
+            if any(file.lower().endswith(ext) for ext in image_extensions):
+                # 构建文件的完整路径（可选）
+                file_path = root+'/'+file
+                # 只添加文件名到列表中
+                image_urls.append(file_path)
+    # print(image_urls)
+    title = "以下是所有生产环境节点ECS的监控状态图"
+    field_information = []
+    column_name = []
+    html_table = form(column_name=column_name, title=title,field_information=field_information,image_urls=image_urls)
+    return html_table
+# ecs详情
+def get_ecs_information():
+    field_information = []
+    ECS_Number=0
+    count = 0
+    for zone in zones:
+        ECS_Number +=len(get_sys_info(zone))
+        for file_info in get_sys_info(zone):
+            count += 1
+            field = count, file_info["InstanceId"], file_info["VpcAttributes"]["PrivateIpAddress"]["IpAddress"][0], file_info["Status"], file_info["OSType"], file_info["Cpu"],file_info["Memory"]/1024,file_info["InstanceName"],zone
+            # ecs_info.append(information)
+            field_information.append(field)
+    image_urls = ''
+    title = '阿里云ECS服务详细明细，实例数量共计:%s台' % ECS_Number
+    column_name = ["序号", "实例ID", "IP地址","运行状态", "系统类型", "cpu核数","内存","实例名","所在地区"]
+    html_table = form(column_name=column_name, title=title,field_information=field_information,image_urls=image_urls)
+    return html_table
+
+
+# ECS磁盘使用率
+def disk_info(zone):
+    request = DescribeMetricTopRequest()
+    request.set_accept_format('json')
+    request.set_Namespace(ecs_namespace)
+    request.set_MetricName(Disk_metricname)
+    request.set_Orderby("Average")
+    request.set_Length(strip_number)
+    response_0 = get_clt(zone).do_action_with_exception(request)
+    response_1 = str(response_0, encoding='utf-8')
+    return response_1
+
+
+# 列出超出磁盘阈值的ECS信息
+def get_disk_Value():
+    field_information = []
+    count = 0
+    for zone in zones:
+        Slicing_0 = eval(str(disk_info(zone)))
+        Slicing_1 = Slicing_0["Datapoints"]
+        Slicing_2 = eval(Slicing_1)
+        for Slicing_3 in Slicing_2:
+            if Slicing_3.get("Average") >= float(Disk_use_rate):
+                for zone in zones:
+                    for ecs_id_0 in get_sys_info(zone):
+                        if Slicing_3.get("instanceId") == ecs_id_0['InstanceId']:
+                            count += 1
+                            ecs_remarks = ecs_id_0['InstanceId'], ecs_id_0['InstanceName']
+                            ecs_IP_0 = ecs_id_0['VpcAttributes']
+                            ecs_IP_1 = ecs_IP_0["PrivateIpAddress"]["IpAddress"][0]
+                            field = count, Slicing_3.get("instanceId"), ecs_IP_1, Slicing_3.get(
+                                "mountpoint"), Slicing_3.get("Maximum"), list(ecs_remarks)[1],zone
+                            field_information.append(field)
+    image_urls = ''
+    title = 'ECS磁盘使用率大于%s%%的服务器' % (Disk_use_rate)
+    column_name = ["序号", "实例ID", "IP地址", "目录", "使用率(%)", "实例名","所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+    return html_table
+
+# ECS-CPU使用率
+def CPU_info(zone):
+    request = DescribeMetricTopRequest()
+    request.set_accept_format('json')
+    request.set_Namespace(ecs_namespace)
+    request.set_MetricName(CPU_metricname)
+    request.set_Orderby("Average")
+    request.set_Length(strip_number)
+    response_0 = get_clt(zone).do_action_with_exception(request)
+    response_1 = str(response_0, encoding='utf-8')
+    return response_1
+
+# 列出超出CPU阈值的ECS信息
+def get_CPU_Value():
+    count = 0
+    field_information = []
+    for zone in zones:
+        Slicing_0 = eval(str(CPU_info(zone)))
+        Slicing_1 = Slicing_0["Datapoints"]
+        Slicing_2 = eval(Slicing_1)
+        for Slicing_3 in Slicing_2:
+            if Slicing_3.get("Average") >= float(Cpu_user_rate):
+                for zone in zones:
+                    for ecs_id_0 in get_sys_info(zone):
+                        if Slicing_3.get("instanceId") == ecs_id_0['InstanceId']:
+                            ecs_remarks = ecs_id_0['InstanceId'], ecs_id_0['InstanceName']
+                            ecs_IP_0 = ecs_id_0['VpcAttributes']
+                            ecs_IP_1 = ecs_IP_0["PrivateIpAddress"]["IpAddress"][0]
+                            count += 1
+                    field = count, Slicing_3.get("instanceId"), ecs_IP_1, Slicing_3.get(
+                        "Maximum"), list(ecs_remarks)[1],zone
+                    field_information.append(field)
+    image_urls = ''
+    title = 'ECS-CPU使用率大于%s%%的服务器' % (Cpu_user_rate)
+    column_name = ["序号", "实例ID", "IP地址", "使用率(%)", "实例名","所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+    return html_table
+
+# ECS内存使用率
+def Member_info(zone):
+    request = DescribeMetricTopRequest()
+    request.set_accept_format('json')
+    request.set_Namespace(ecs_namespace)
+    request.set_MetricName(Mem_metricname)
+    request.set_Orderby("Average")
+    request.set_Length(strip_number)
+    response_0 = get_clt(zone).do_action_with_exception(request)
+    response_1 = str(response_0, encoding='utf-8')
+    return response_1
+
+
+# 列出超出内存阈值的ECS信息
+def get_Member_Value():
+    count = 0
+    field_information = []
+    for zone in zones:
+        Slicing_0 = eval(str(Member_info(zone)))
+        Slicing_1 = Slicing_0["Datapoints"]
+        Slicing_2 = eval(Slicing_1)
+        for Slicing_3 in Slicing_2:
+            if Slicing_3.get("Average") >= float(Mem_user_rate):
+                # for zone in zones:
+                for ecs_id_0 in get_sys_info(zone):
+                    if Slicing_3.get("instanceId") == ecs_id_0['InstanceId']:
+                        ecs_remarks = ecs_id_0['InstanceId'], ecs_id_0['InstanceName']
+                        ecs_IP_0 = ecs_id_0['VpcAttributes']
+                        ecs_IP_1 = ecs_IP_0["PrivateIpAddress"]["IpAddress"][0]
+                        count += 1
+                field = count, Slicing_3.get("instanceId"), ecs_IP_1, Slicing_3.get(
+                    "Maximum"), list(ecs_remarks)[1],zone
+                field_information.append(field)
+    image_urls = ''
+    title = 'ECS内存使用率大于%s%%' % (Mem_user_rate)
+    column_name = ["序号", "实例ID", "IP地址", "使用率(%)", "实例名","所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+    return html_table
+
+# 列表---RDS实例列表
+def rds_info(zone):
+    # 创建请求对象，并设置请求参数
+    request = CommonRequest()
+    request.set_accept_format('json')
+    request.set_domain('rds.aliyuncs.com')
+    request.set_method('POST')
+    request.set_protocol_type('https')  # https | http
+    request.set_version('2014-08-15')
+    request.set_action_name('DescribeDBInstances')
+    request.add_query_param('RegionId', zone)
+    request.add_query_param('PageSize', strip_number)  # 条数
+    # request.add_query_param('PageNumber', page_number) ###页码
+    response = get_clt(zone).do_action(request)
+    # print(response)
+    false = 0
+    rds_list_0 = eval(str(response, encoding='utf-8'))
+    # print(rds_list_0)
+    rds_list_1 = rds_list_0["Items"]["DBInstance"]
+    return rds_list_1
+def get_rds_info():
+    count = 0
+    field_information = []
+    rds_number=0
+    for zone in zones:
+        rds_number+=len(rds_info(zone))
+        for i in rds_info(zone):
+            count+=1
+            field = count, i['DBInstanceId'], i['Engine'], i['EngineVersion'], i['DBInstanceStatus'],i['DBInstanceMemory']/1024,i['DBInstanceDescription'],zone
+            field_information.append(field)
+    # print(field_information)
+    image_urls = ''
+    title = 'RDS数据库详细情况,RDS实例数量共计:%s台' % rds_number
+    column_name = ["序号", "实例ID", "实例类型", "使用版本","运行状态",'实例内存', "实例名", "所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+    return html_table
+
+# 列出RDS磁盘使用率
+def rds_disk_info(zone):
+    request = DescribeMetricTopRequest()
+    request.set_accept_format('json')
+    request.set_MetricName("DiskUsage")
+    request.set_Namespace("acs_rds_dashboard")
+    request.set_Orderby("Average")
+    request.set_Length(strip_number)
+    response_0 =get_clt(zone).do_action_with_exception(request)
+    response_1 = str(response_0, encoding='utf-8')
+    return response_1
+
+
+# 列出RDS超出阀值的资源
+def rds_disk_threshold():
+    count = 0
+    field_information = []
+    for zone in zones:
+        rds_threshold_0 = eval(rds_disk_info(zone))
+        rds_threshold_1 = eval(rds_threshold_0["Datapoints"])
+        for rds_threshold_3 in rds_threshold_1:
+            if rds_threshold_3["Average"] >= float(Disk_use_rate):
+                for rds_id_0 in rds_info(zone):
+                    if rds_id_0["DBInstanceId"] == 'rm-2ze3bzdt0ej4za0t6':
+                        break
+                    if rds_threshold_3["instanceId"] == rds_id_0["DBInstanceId"]:
+                        count += 1
+                        field = count, rds_threshold_3["instanceId"], rds_id_0[
+                            "DBInstanceDescription"], rds_threshold_3["Average"],zone
+                        field_information.append(field)
+    image_urls = ''
+    title = 'RDS-磁盘使用率大于70%的实例'
+    column_name = ["序号", "实例ID", "实例名", "使用率(%)","所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+    return html_table
+
+# 列出redis实例列表
+def redis_info(zone):
+    request = DescribeInstancesRequest2()
+    request.set_accept_format('json')
+    request.set_PageNumber(page_number)  # 页码
+    request.set_PageSize(strip_number)  # 条数
+    response_0 = get_clt(zone).do_action_with_exception(request)
+    false = true = 0
+    response_1 = eval(str(response_0, encoding='utf-8'))
+    response_2 = response_1["Instances"]["KVStoreInstance"]
+    # print(response_2)
+    return response_2
+
+def get_redis_info():
+    count = 0
+    field_information = []
+    redis_number=0
+    for zone in zones:
+        redis_number+=len(redis_info(zone))
+        for i in redis_info(zone):
+            # print(i)
+            count += 1
+            field = count, i['InstanceId'], i['InstanceType'], i['EngineVersion'], i['InstanceStatus'], i['Capacity']/1024,i['Bandwidth'],i['InstanceName'], zone
+            field_information.append(field)
+    # print(field_information)
+    image_urls=''
+    title = 'Redis数据库详细情况,实例数量共计:%s台' % redis_number
+    column_name = ["序号", "实例ID", "实例类型", "使用版本", "运行状态", '实例内存', "带宽","实例名", "所在地域"]
+    html_table = form(column_name=column_name, title=title,
+                      field_information=field_information,image_urls=image_urls)
+
+    return html_table
+def get_metric(MetricName, Period, StartTime, EndTime, t1, t2, instanceId,zone):
+    request = DescribeMetricListRequest()
+    request.set_accept_format('json')
+
+    request.set_MetricName(MetricName)
+    request.set_Namespace("acs_ecs_dashboard")
+    request.set_Period(Period)
+    request.set_StartTime(StartTime)
+    request.set_EndTime(EndTime)
+    request.set_Dimensions("{\"instanceId\":\"" + instanceId + "\"}")  # 比如node1
+
+    metric_list = []
+    time_list = []
+    response = get_clt(zone).do_action_with_exception(request)
+
+    res_json = json.loads(response)
+    Datapoints = res_json['Datapoints']
+    # print(type(Datapoints))
+    # print(Datapoints)
+    data_list = eval(Datapoints)
+    for i in data_list:
+        # print(i)
+        metric_avg = i['Average']
+        # print(cpu_avg)
+        metric_list.append(metric_avg)
+        # print(int(i['timestamp']/1000))
+        nowtime = time.strftime("%H:%M", time.localtime(i['timestamp'] / 1000))
+        # print(nowtime)
+        time_list.append(nowtime)
+
+    return time_list, metric_list
+
+
+def generate_image(instanceId, instance_name,metrics, tick_spacing,zone):
+    count = len(metrics)
+    fig, subs = plt.subplots(count, 1, figsize=(6, 8))
+    plt.rcParams['font.sans-serif'] = ['SimHei']  # 中文标示
+
+    for MetricName in metrics:
+        index = metrics.index(MetricName)
+        if '_' in MetricName:
+            time_list, metric_list = get_metric(MetricName, 30, StartTime, EndTime, t1, t2, instanceId,zone)
+            metric_avg = sum(metric_list)/len(metric_list)
+            metric = MetricName.split('_')[0]
+            subs[index].xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+            subs[index].set_title('{}平均使用率{:.2f}%'.format(metric, metric_avg))
+            subs[index].plot(time_list, metric_list, 'r', label=metric)
+            subs[index].set_ylabel('单位(%)')
+            subs[index].grid(True)
+            subs[index].legend()
+        elif type(MetricName) == list:
+            metric_avg = []
+            for i in MetricName:
+                time_list, metric_list = get_metric(i, 60, StartTime, EndTime, t1, t2, instanceId,zone)
+                metric_avg.append(sum(metric_list) / len(metric_list))
+
+                metric = i
+                subs[index].xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+                # subs[index].set_title('硬盘io状态-{},平均值{:.2f}'.format("DiskIOPS", metric_avg))
+                subs[index].plot(time_list, metric_list, label=metric)
+                subs[index].set_ylabel('{}'.format("DiskIOPS单位(次)"))
+                # subs[index].grid(True)
+                # subs[index].legend()
+            subs[index].set_title('硬盘io状态({}平均值{:.2f} | {}平均值{:.2f})'.format("DiskRead", metric_avg[0], "DiskWrite", metric_avg[1]))
+            subs[index].grid(True)
+            subs[index].legend()
+        else:
+            time_list, metric_list = get_metric(MetricName, 60, StartTime, EndTime, t1, t2, instanceId,zone)
+            metric = MetricName
+            subs[index].xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
+            subs[index].set_title('状态-{}'.format(metric))
+            subs[index].plot(time_list, metric_list, 'r', label=metric)
+            subs[index].set_ylabel('{}'.format(metric))
+            subs[index].grid(True)
+            subs[index].legend()
+
+    # plt.title('生产环境k8s工作节点{}最近1小时{}使用率(%)'.format(instance_name, MetricName))  # 标题
+    # plt.grid(True)  # 显示网格
+    plt.xlabel('统计时间 {}'.format(t1))  # X轴标题
+    plt.suptitle('生产环境工作节点{}最近{}小时状态'.format(instance_name, duration), fontsize=14)
+    plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.4)
+    plt.savefig('./picture/ECS/{}.jpg'.format(instance_name))
+    plt.close()
+    # plt.show()
+
+'''将html文件生成pdf文件'''
+def html_to_pdf(html, to_file):
+    # 将wkhtmltopdf.exe程序绝对路径传入config对象
+    path_wkthmltopdf = r'F:\\python\\pythonProject1\\蓝景科技\\test1\\wkhtmltopdf\bin\\wkhtmltopdf.exe'
+
+    config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+    # 生成pdf文件，to_file为文件路径
+    options = {
+        'enable-local-file-access': True  # 关键解决图片无法加载的问题
+    }
+    pdfkit.from_file(html, to_file, configuration=config,options=options)
+
+# 邮件
+# 邮件
+def send_mail(email_html):
+    msg = MIMEMultipart()  # 构建主体
+    msg['Subject'] = Header(subject,'utf-8')  # 邮件主题
+    msg['From'] = sender  # 发件人
+    msg['To'] = ",".join(receiver)  # 收件人
+    msg.attach(MIMEText(email_html, 'html', 'utf-8'))
+    smtp = SMTP_SSL('smtp.163.com', 465)  # 指定邮箱服务器
+    smtp.login(username, password)  # 登录邮箱
+    for mailuser in receiver:
+        smtp.sendmail(sender, mailuser, msg.as_string())
+    smtp.quit()  # 结束服务
+    print('邮件发送完成--')
+if __name__ == '__main__':
+    # for zone in zones:
+    #     for item in get_ecs_info(zone):
+    #         print(item)
+    #         generate_image(item['InstanceId'], item['InstanceName'],
+    #                        ["cpu_total", "memory_usedutilization", ["DiskReadIOPS", "DiskWriteIOPS"]],
+    #                        tick_spacing,zone)
+    html = html_formatting(
+        Aliyun_html=get_ecs_information() +
+                    get_image_urls() +
+                    get_disk_Value() +
+                    get_CPU_Value() +
+                    get_Member_Value() +
+                    get_rds_info() +
+                    rds_disk_threshold()+
+                    get_redis_info()
+    )
+    # send_mail(email_html=html)
+    # get_disk_Value()
+    with open("sample.html", "w", encoding="utf-8") as file:
+        file.write(html)
+    # send_mail(email_html="./sample.html")
+
+    html_to_pdf('sample.html','out_2.pdf')
